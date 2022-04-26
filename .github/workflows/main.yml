@@ -1,13 +1,22 @@
-name: Validate PR
+name: Validate Pull Request
 on:
   pull_request:
-    branches: [ master ]
+    branches:
+    - master
 jobs:
   check_formatting:
     runs-on: ubuntu-latest
     name: Check Formatting
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-        dotnet tool restore
-        dotnet csharpier --check
+    - uses: actions/checkout@v2
+    # dotnet nuget list source needed because of https://github.com/NuGet/Home/issues/7503#issuecomment-1048197542
+    - run: |
+       dotnet nuget list source
+       dotnet tool restore
+       dotnet csharpier . --check
+  check_case:
+    runs-on: ubuntu-latest
+    name: Check Case Sensitivity
+    steps:
+    - uses: actions/checkout@v2
+    - uses: credfeto/action-case-checker@v1.2.0
